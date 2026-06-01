@@ -1,2 +1,3 @@
 ingestion/**/temp_*/
 *.csv
+data
