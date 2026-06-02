@@ -132,9 +132,9 @@ df["ingestion_time"] = pd.Timestamp.utcnow()
 df["source"] = "api_fhir_encounters"
 
 # -------- SAVE TEMP --------
-os.makedirs("temp_encounters", exist_ok=True)
+os.makedirs("temp", exist_ok=True)
 
-temp_file = "temp_encounters/encounters_api_ingested.csv"
+temp_file = "temp/encounters_api_ingested.csv"
 df.to_csv(temp_file, index=False)
 
 # -------- S3 UPLOAD --------
