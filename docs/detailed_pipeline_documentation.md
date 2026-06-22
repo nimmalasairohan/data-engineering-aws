@@ -75,8 +75,8 @@ The DAG dependency chain is:
 ```text
 [patient_ingestion, encounter_ingestion]
         >> bronze
-        >> bronze_databrics
-        >> silver_databrics
+        >> bronze_databricks
+        >> silver_databricks
         >> trigger_dbt_cloud
 ```
 
@@ -104,7 +104,7 @@ rohan-healthcare-project
 Script:
 
 ```text
-airflow/include/Ingestion/patients/json_api_ingestion_paients.py
+airflow/include/Ingestion/patients/json_api_ingestion_patients.py
 ```
 
 Input:
@@ -157,7 +157,7 @@ s3://rohan-healthcare-project/bronze/api/patients/load_date=YYYY-MM-DD/api_patie
 Script:
 
 ```text
-airflow/include/Ingestion/patients/csv_ingesion_patients.py
+airflow/include/Ingestion/patients/csv_ingestion_patients.py
 ```
 
 Input:
@@ -194,7 +194,7 @@ s3://rohan-healthcare-project/bronze/csv/patients/load_date=YYYY-MM-DD/csv_patie
 Script:
 
 ```text
-airflow/include/Ingestion/encounters/json_ingesion_encounters.py
+airflow/include/Ingestion/encounters/json_ingestion_encounters.py
 ```
 
 Input:
@@ -244,7 +244,7 @@ s3://rohan-healthcare-project/bronze/api/encounters/load_date=YYYY-MM-DD/api_enc
 Script:
 
 ```text
-airflow/include/Ingestion/encounters/csv_ingesion_encounters.py
+airflow/include/Ingestion/encounters/csv_ingestion_encounters.py
 ```
 
 Input:
@@ -298,7 +298,7 @@ The bronze layer reads files from S3 and stores them as Delta tables.
 Script:
 
 ```text
-Databrics/bronze/patients/patients_ingestion.py
+Databricks/bronze/patients/patients_ingestion.py
 ```
 
 Configured datasets:
@@ -325,7 +325,7 @@ Processing details:
 Script:
 
 ```text
-Databrics/bronze/encounters/encounters_ingestion.py
+Databricks/bronze/encounters/encounters_ingestion.py
 ```
 
 Configured datasets:
@@ -346,7 +346,7 @@ The silver layer creates cleaned, standardized, and analytics-ready records.
 Script:
 
 ```text
-Databrics/silver/patients/patients_transformation.py
+Databricks/silver/patients/patients_transformation.py
 ```
 
 Input tables:
@@ -402,7 +402,7 @@ healthcare.silver.silver_patients
 Script:
 
 ```text
-Databrics/silver/encounters/encounters_transformation.py
+Databricks/silver/encounters/encounters_transformation.py
 ```
 
 Input tables:
@@ -646,9 +646,9 @@ Current dbt Cloud settings in the DAG:
 
 | Setting | Value |
 | --- | --- |
-| Account id | `70506183137352` |
-| Job id | `70506183132521` |
-| API base | `https://kw833.us1.dbt.com/api/v2/` |
+| Account id | Airflow variable `DBT_ACCOUNT_ID` |
+| Job id | Airflow variable `DBT_JOB_ID` |
+| API base | Airflow variable `DBT_API_BASE_URL` |
 
 ## 12. How to Run the Pipeline
 
@@ -682,6 +682,9 @@ Create or verify:
 
 - `healthcare_aws`
 - `healthcare_databricks`
+- `DBT_API_BASE_URL`
+- `DBT_ACCOUNT_ID`
+- `DBT_JOB_ID`
 - `DBT_SERVICE_TOKEN`
 
 ### Step 4: Test AWS
@@ -769,6 +772,7 @@ Check:
 Check:
 
 - Airflow variable `DBT_SERVICE_TOKEN`.
+- Airflow variables `DBT_API_BASE_URL`, `DBT_ACCOUNT_ID`, and `DBT_JOB_ID`.
 - dbt Cloud account id and job id.
 - Token permissions.
 - Network access from Airflow to dbt Cloud.
@@ -828,17 +832,9 @@ Recommended dbt tests:
 
 Add dbt `sources.yml` and model descriptions so dbt Cloud can show lineage, documentation, and freshness checks.
 
-### 15.7 Improve Folder and File Names
+### 15.7 Keep Names Consistent
 
-Some current names contain spelling mistakes, such as:
-
-- `Databrics`
-- `json_api_ingestion_paients.py`
-- `csv_ingesion_patients.py`
-- `json_ingesion_encounters.py`
-- `csv_ingesion_encounters.py`
-
-Renaming them would improve readability, but update DAG paths at the same time.
+The obvious spelling mistakes in the main Databricks folder and ingestion script names have been cleaned up. Going forward, keep file names boring and consistent: entity first when useful, action second, and avoid changing paths without updating Airflow task references and documentation at the same time.
 
 ## 16. Mental Model for Re-Understanding the Project
 

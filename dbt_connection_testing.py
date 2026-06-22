@@ -1,10 +1,12 @@
 import requests
+import os
 
-ACCOUNT_ID = "70506183137352"
-JOB_ID = "70506183132521"
-SERVICE_TOKEN = "dbtc_0wxqBcQ9nCy38xMZUOPoyVzGftIr_tAYSG9l8oe9evf3AI2gYE"
+ACCOUNT_ID = os.environ["DBT_ACCOUNT_ID"]
+JOB_ID = os.environ["DBT_JOB_ID"]
+SERVICE_TOKEN = os.environ["DBT_SERVICE_TOKEN"]
+DBT_API_BASE_URL = os.environ["DBT_API_BASE_URL"]
 
-url = f"https://kw833.us1.dbt.com/api/v2/accounts/{ACCOUNT_ID}/jobs/{JOB_ID}/run/"
+url = f"{DBT_API_BASE_URL.rstrip('/')}/accounts/{ACCOUNT_ID}/jobs/{JOB_ID}/run/"
 
 headers = {
     "Authorization": f"Token {SERVICE_TOKEN}",

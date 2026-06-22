@@ -20,14 +20,14 @@ def healthcare_pipeline():
             subprocess.run(
             [
                 "python",
-                "/usr/local/airflow/include/Ingestion/patients/json_api_ingestion_paients.py"
+                "/usr/local/airflow/include/Ingestion/patients/json_api_ingestion_patients.py"
             ],
             check=True
             )
             subprocess.run(
             [
                 "python",
-                "/usr/local/airflow/include/Ingestion/patients/csv_ingesion_patients.py"
+                "/usr/local/airflow/include/Ingestion/patients/csv_ingestion_patients.py"
             ],
             check=True
             )
@@ -38,30 +38,30 @@ def healthcare_pipeline():
             subprocess.run(
             [
                 "python",
-                "/usr/local/airflow/include/Ingestion/encounters/json_ingesion_encounters.py"
+                "/usr/local/airflow/include/Ingestion/encounters/json_ingestion_encounters.py"
             ],
             check=True
             )
             subprocess.run(
             [
                 "python",
-                "/usr/local/airflow/include/Ingestion/encounters/csv_ingesion_encounters.py"
+                "/usr/local/airflow/include/Ingestion/encounters/csv_ingestion_encounters.py"
             ],
             check=True
             )
         
     @task
     def bronze():
-        print("going to broze")
+        print("going to bronze")
         
         
     @task
-    def bronze_databrics():
-        print("broze databrics ingestion")
+    def bronze_databricks():
+        print("bronze databricks ingestion")
         
     @task
-    def silver_databrics():
-        print("silver databrics transformation")
+    def silver_databricks():
+        print("silver databricks transformation")
         
 
         
@@ -71,12 +71,13 @@ def healthcare_pipeline():
 
         import requests
     
-        ACCOUNT_ID = "70506183137352"
-        JOB_ID = "70506183132521"
+        DBT_API_BASE_URL = Variable.get("DBT_API_BASE_URL")
+        ACCOUNT_ID = Variable.get("DBT_ACCOUNT_ID")
+        JOB_ID = Variable.get("DBT_JOB_ID")
         DBT_SERVICE_TOKEN = Variable.get("DBT_SERVICE_TOKEN")
     
         url = (
-            f"https://kw833.us1.dbt.com/api/v2/"
+            f"{DBT_API_BASE_URL.rstrip('/')}/"
             f"accounts/{ACCOUNT_ID}/jobs/{JOB_ID}/run/"
         )
     
@@ -105,13 +106,13 @@ def healthcare_pipeline():
     encounter = encounter_ingestion()
     bronze_task = bronze()
     bronze = DatabricksRunNowOperator(
-    task_id="bronze_databrics",
+    task_id="bronze_databricks",
     databricks_conn_id="healthcare_databricks",
     job_id=1069224034326071
         )
 
     silver = DatabricksRunNowOperator(
-    task_id="silver_databrics",
+    task_id="silver_databricks",
     databricks_conn_id="healthcare_databricks",
     job_id=1061440484747266
         )

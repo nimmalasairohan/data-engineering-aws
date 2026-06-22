@@ -40,11 +40,11 @@ The main DAG is `airflow/dags/healthcare_pipeline.py`.
 3. `bronze`
    - Placeholder Airflow task used before the Databricks bronze job.
 
-4. `bronze_databrics`
+4. `bronze_databricks`
    - Triggers the Databricks job with job id `1069224034326071`.
    - Loads S3 files into Delta bronze tables using Databricks Auto Loader.
 
-5. `silver_databrics`
+5. `silver_databricks`
    - Triggers the Databricks job with job id `1061440484747266`.
    - Standardizes, joins, deduplicates, and quality-checks bronze tables into silver Delta tables.
 
@@ -110,6 +110,9 @@ Create these in Airflow before running the DAG:
 
 - AWS connection: `healthcare_aws`
 - Databricks connection: `healthcare_databricks`
+- Airflow variable: `DBT_API_BASE_URL`
+- Airflow variable: `DBT_ACCOUNT_ID`
+- Airflow variable: `DBT_JOB_ID`
 - Airflow variable: `DBT_SERVICE_TOKEN`
 
 The AWS connection is used by the S3 test DAG and can also be reused by ingestion utilities. The Databricks connection is used by `DatabricksRunNowOperator`. The dbt token is used to call the dbt Cloud API.
@@ -133,7 +136,7 @@ In the Airflow UI:
 
 1. Confirm the `healthcare_aws` connection works by running `test_aws_connection`.
 2. Confirm `healthcare_databricks` is configured.
-3. Add `DBT_SERVICE_TOKEN` as an Airflow variable.
+3. Add `DBT_API_BASE_URL`, `DBT_ACCOUNT_ID`, `DBT_JOB_ID`, and `DBT_SERVICE_TOKEN` as Airflow variables.
 4. Trigger the `healthcare_pipeline` DAG manually.
 
 ## Repository Layout
@@ -149,7 +152,7 @@ airflow/
       encounters/
     utils/
 
-Databrics/
+Databricks/
   bronze/
     patients/
     encounters/
