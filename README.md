@@ -41,11 +41,11 @@ The main DAG is `airflow/dags/healthcare_pipeline.py`.
    - Placeholder Airflow task used before the Databricks bronze job.
 
 4. `bronze_databricks`
-   - Triggers the Databricks job with job id `1069224034326071`.
+   - Triggers the Databricks job with job id ``.
    - Loads S3 files into Delta bronze tables using Databricks Auto Loader.
 
 5. `silver_databricks`
-   - Triggers the Databricks job with job id `1061440484747266`.
+   - Triggers the Databricks job with job id ``.
    - Standardizes, joins, deduplicates, and quality-checks bronze tables into silver Delta tables.
 
 6. `trigger_dbt_cloud`
